@@ -55,7 +55,7 @@ function getTemp(prevTemperature) {
     return prevTemperature - 0.1;
 }
 
-var arrayToSort = [0, 1, 2, 3, 4, 5];
+var solution = [0, 1, 2, 3, 4, 5];
 class MK {
     constructor( name, sks ) {
         this.name = name;
@@ -69,7 +69,7 @@ class MK {
     }
 }
  
-var initialState = generateSolution(arrayToSort);
+var initialState = generateSolution(solution);
     var result = simulatedAnnealing({
         initialState: initialState,
         tempMax: 1000,
