@@ -61,6 +61,12 @@ class MK {
         this.name = name;
         this.sks = sks;
     }
+    getName() {
+        return this.name;
+    }
+    getSKS() {
+        return this.sks;
+    }
 }
  
 var initialState = shuffle(arrayToSort);
