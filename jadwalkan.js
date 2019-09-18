@@ -69,7 +69,7 @@ class MK {
     }
 }
  
-var initialState = shuffle(arrayToSort);
+var initialState = generateSolution(arrayToSort);
     var result = simulatedAnnealing({
         initialState: initialState,
         tempMax: 1000,
