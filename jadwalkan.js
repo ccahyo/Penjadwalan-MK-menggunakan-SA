@@ -1,4 +1,5 @@
 const simulatedAnnealing = require('simulated-annealing');
+const mkname = 8, mkklas = 12, gedungA = 7, gedungB = 6, paralelklas = gedungA+gedungB;
 
 // Shuffles array in place
 function generateSolution(a) {
@@ -14,19 +15,18 @@ function generateSolution(a) {
 
 function getEnergy(state) {
     var energy = 0;
-    for (let i = 1; i < state.length; i++) {
-        if (state[i] != i) {
-            energy += Math.abs(state.indexOf(i) - i);
-        }
-    }
-    for (let i = 1; i < state.length; i++) {
-        if (state[i-1] > state[i]) {
-            energy += 1;
-        }
-    }
-    for (let i = 1; i < state.length; i++) {
-        if (state[i] - state[i - 1] > 1) {
-            energy += 1;
+    for (i = 0; i < state.length; i+=paralelklas) {
+        for ( j=i; j<paralelklas; j++ ) {
+            if ( state[j] != undefined ) {
+                for ( l=i; l<paralelklas; l++ ) {
+                    if ( state[l] != undefined ) {
+                        if ( state[j].getName() == state[l].getName() )
+                            energy --;
+                        if ( state[j].getklas() == state[l].getklas() )
+                            energy ++;
+                    }
+                }
+            }
         }
     }
     return energy;
@@ -38,13 +38,13 @@ function newState(prevState) {
     var to = from + 1 + Math.floor(Math.random() * (prevState.length - 2 - from));
 
     var state = [];
-    for (let i = 0; i < from; i++) {
+    for (i = 0; i < from; i++) {
         state.push(prevState[i]);
     }
-    for (let i = to; i >= from; i--) {
+    for (i = to; i >= from; i--) {
         state.push(prevState[i]);
     }
-    for (let i = to+1; i < prevState.length; i++) {
+    for (i = to+1; i < prevState.length; i++) {
         state.push(prevState[i]);
     }
     return state;
@@ -55,11 +55,12 @@ function getTemp(prevTemperature) {
     return prevTemperature - 0.1;
 }
 
-var solution = [0, 1, 2, 3, 4, 5];
+
 class MK {
-    constructor( name, sks ) {
+    constructor( name, sks, klas ) {
         this.name = name;
         this.sks = sks;
+        this.klas = klas;
     }
     getName() {
         return this.name;
@@ -67,12 +68,21 @@ class MK {
     getSKS() {
         return this.sks;
     }
+    getklas() {
+        return this.klas;
+    }
 }
- 
+
+var solution = [];
+for ( j=0; j<mkname; j++ )      //nama MK
+    for ( i=0; i<mkklas; i++ )  //kelas MK
+        solution[solution.length] = new MK( j, 3, i );
+solution[260] = undefined;      //slot maks
+
 var initialState = generateSolution(solution);
     var result = simulatedAnnealing({
         initialState: initialState,
-        tempMax: 1000,
+        tempMax: 1000000,
         tempMin: 1,
         newState: newState,
         getTemp: getTemp,
